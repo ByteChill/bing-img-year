@@ -1,0 +1,27 @@
+name: 'GitHub Actions BingPicApi'
+
+on:
+  push:
+    branches: 
+      - master
+  schedule:
+    - cron: '0 16 * * *'
+jobs:
+  Bing-spider:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: 'Working'
+        timeout-minutes: 350
+        run: bash ./bing.sh
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "$(date)" -a
+      - name: 'Push changes'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.TOKEN }}
